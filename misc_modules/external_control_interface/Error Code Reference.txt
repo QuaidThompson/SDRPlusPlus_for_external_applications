@@ -1,0 +1,13 @@
+
+Error code          |       Problem
+---------------------------------------------------------------------------------
+E:0                 |   Recieved frequency set command without a frequency
+E:1                 |   VFO control is not enabled (tuningEnabled == false)
+E:2                 |   Mode set command is missing arguements
+E:3                 |   Recieved a request to set bandwidth to a non-integer
+E:4                 |   An invalid mode was entered
+E:5                 |   Not entirely sure, but it failed a check at the end of the 'set mode' command
+E:6                 |   Wrong number of arguements for VFO command
+E:7                 |   Invalid VFO channel
+Done:0              |   Command executed without any issues
+Done:1              |   Command is correct, but it dosent actually do anything
