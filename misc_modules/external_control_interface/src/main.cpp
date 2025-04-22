@@ -421,7 +421,7 @@ private:
 
             // Respond with the frequency
             char buf[128];
-            resp = "Done:0\n"
+            resp = "Done:0\n";
             sprintf(buf, "%" PRIu64 "\n" + resp, (uint64_t)freq);
             client->write(strlen(buf), (uint8_t*)buf);
         }
@@ -498,7 +498,7 @@ private:
                 resp += "0\n";
             }
 
-            resp += "Done:0"
+            resp += "Done:0";
             client->write(resp.size(), (uint8_t*)resp.c_str());
         }
         else if (parts[0] == "V" || parts[0] == "\\set_vfo") {      // user wants to set a VFO
