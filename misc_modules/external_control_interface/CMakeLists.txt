@@ -15,15 +15,17 @@
 cmake_minimum_required(VERSION 3.13)
 project(external_control_interface)
 
-# collect all your .cpp/.c files
-file(GLOB SRC "src/*.cpp" "src/*.c")
+# collect your sources
+file(GLOB SRC "src/*.cpp")
 
-# this includes the helper that turns SRC into a plugin linked against core
+# this sets up the shared‐lib + links to sdrpp_core
 include(${SDRPP_MODULE_CMAKE})
 
-# if you need to include SDR++ headers, you can also add:
+# —— ADD THIS BLOCK —— 
 target_include_directories(external_control_interface
   PRIVATE
-    "src/"
-    "${SDRPP_CORE_ROOT}/src/"
+    "src/"                                      # your module’s own headers
+    "${SDRPP_CORE_ROOT}/src/"                  # SDR++ core headers
+    "${CMAKE_SOURCE_DIR}/misc_modules/recorder/src/"  # for recorder_interface.h
 )
+# —— END ADDITION ——
