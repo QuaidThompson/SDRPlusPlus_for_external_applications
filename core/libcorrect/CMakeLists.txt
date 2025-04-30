@@ -37,23 +37,40 @@ else()
 endif()
 endif(MSVC)
 
-find_library(FEC fec)
-CHECK_LIBRARY_EXISTS(FEC dotprod "" HAVE_LIBFEC)
+# look for lowercase libfec
+find_library(FEC_LIB NAMES fec)
+if(FEC_LIB)
+  # tell the check where to find it, then test the real symbol name
+  set(CMAKE_REQUIRED_LIBRARIES ${FEC_LIB})
+  include(CheckLibraryExists)
+  check_library_exists(fec dotprod "" HAVE_LIBFEC)
+  unset(CMAKE_REQUIRED_LIBRARIES)
+else()
+  # if libfec-dev isn’t installed, turn the test off
+  set(HAVE_LIBFEC OFF CACHE BOOL "" FORCE)
+endif()
 
-if(NOT CMAKE_CROSSCOMPILING)
-  # Check if host machine can compile with SSE 4.1 intrinsic
+if(NOT CMAKE_CROSSCOMPILING AND
+   CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(x86_64|i[3-6]86)$")
   cmake_push_check_state(RESET)
   set(CMAKE_REQUIRED_DEFINITIONS -march=native)
   check_c_source_compiles("
     #include <x86intrin.h>
     int main() {
-      __m128i a;
-      __m128i b;
+      __m128i a, b;
       __m128i c = _mm_min_epu16(a, b);
       return 0;
     }" HAVE_SSE)
   cmake_pop_check_state()
+else()
+  # on ARM (e.g. Raspberry Pi), skip the test and force HAVE_SSE off
+  set(HAVE_SSE OFF CACHE BOOL "" FORCE)
 endif()
+
+if(HAVE_SSE)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse4.1")
+endif()
+
 
 if(HAVE_SSE)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse4.1")

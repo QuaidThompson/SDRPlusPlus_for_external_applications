@@ -65,7 +65,7 @@ option(OPT_BUILD_RIGCTL_CLIENT "Rigctl client to make SDR++ act as a panadapter"
 option(OPT_BUILD_RIGCTL_SERVER "Rigctl backend for controlling SDR++ with software like gpredict" ON)
 option(OPT_BUILD_SCANNER "Frequency scanner" ON)
 option(OPT_BUILD_SCHEDULER "Build the scheduler" OFF)
-option(OPT_BUILD_EXTERNAL_CONTROL_INTERFACE "Build the External Control Interface plugin" OFF)
+# option(OPT_BUILD_EXTERNAL_CONTROL_INTERFACE "Build the External Control Interface plugin" OFF)
 option(OPT_BUILD_RPI_CONTROL "Build RPI LCD and buttons" ON)
 
 # Other options
