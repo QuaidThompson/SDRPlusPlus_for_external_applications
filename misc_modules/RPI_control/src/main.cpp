@@ -170,7 +170,7 @@ public:
         lcd_addr = find_i2c_lcd_addr();
         if (lcd_addr < 0) {
             std::cerr << "LCD not found on I2C bus." << std::endl;
-            return 1;
+            // return 1;
         }
 
         ioctl(i2c_fd, I2C_SLAVE, lcd_addr);
@@ -545,8 +545,8 @@ private:
             // Respond with the frequency
             char buf[128];
             resp = "Done:0\n";
-            sprintf(buf, "%" PRIu64 "\n" + resp, (uint64_t)freq);
-            client->write(strlen(buf), (uint8_t*)buf);
+            // sprintf(buf, "%" PRIu64 "\n" + resp, (uint64_t)freq);
+            // client->write(strlen(buf), (uint8_t*)buf);
         }
         else if (parts[0] == "M" || parts[0] == "\\set_mode") {    // user wants to set the mode
             std::lock_guard lck(vfoMtx);
