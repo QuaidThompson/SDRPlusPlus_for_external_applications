@@ -11,7 +11,7 @@ file(GLOB SRC "src/*.cpp")
 include(${SDRPP_MODULE_CMAKE})
 
 
-target_include_directories(external_control_interface
+target_include_directories(RPI_control
   PRIVATE
     "src/"
     "${SDRPP_CORE_ROOT}/src/"
