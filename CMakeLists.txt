@@ -335,7 +335,7 @@ add_subdirectory("misc_modules/scheduler")
 endif (OPT_BUILD_SCHEDULER)
 
 if (OPT_BUILD_EXTERNAL_CONTROL_INTERFACE)
-add_subdirectory("misc_modules/external_control_interface")
+# add_subdirectory("misc_modules/external_control_interface")
 endif (OPT_BUILD_EXTERNAL_CONTROL_INTERFACE)
 
 if (OPT_BUILD_RPI_CONTROL)
