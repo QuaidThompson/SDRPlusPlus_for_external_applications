@@ -20,6 +20,8 @@
 #include <iomanip>
 #include <sstream>
 #include <string.h>
+#include <thread>
+#include <chrono>
 
 
 
@@ -190,13 +192,6 @@ public:
         //     RADIO_IFACE_CMD_SET_MODE, this,
         //     [&](int, const void*, void*) { updateLCD(); return 0; }
         // );
-
-        core::modComManager.registerInterfaceHandler(
-            selectedVfo,
-            RADIO_IFACE_CMD_SET_FREQUENCY,
-            this,
-            [&](const void* /*in*/, void* /*out*/) {
-                updateLCD();
                 return 0;
             }
         );
