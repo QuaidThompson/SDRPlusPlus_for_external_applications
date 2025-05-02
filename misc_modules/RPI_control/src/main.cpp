@@ -139,6 +139,13 @@ int find_i2c_lcd_addr() {
 
 class SigctlServerModule : public ModuleManager::Instance {
 public:
+
+    // Periodic function
+    void tick(uint32_t /*tm*/) override {
+        updateLCD();
+    }
+
+
     SigctlServerModule(std::string name) {
         this->name = name;
 
@@ -179,15 +186,15 @@ public:
 
         // Initial LCD update
         updateLCD();
-        // Register observers to update LCD on freq/mode changes
-        core::modComManager.registerObserver(
-            RADIO_IFACE_CMD_SET_FREQUENCY, this,
-            [&](int, const void*, void*) { updateLCD(); return 0; }
-        );
-        core::modComManager.registerObserver(
-            RADIO_IFACE_CMD_SET_MODE, this,
-            [&](int, const void*, void*) { updateLCD(); return 0; }
-        );
+        // // Register observers to update LCD on freq/mode changes
+        // core::modComManager.registerObserver(
+        //     RADIO_IFACE_CMD_SET_FREQUENCY, this,
+        //     [&](int, const void*, void*) { updateLCD(); return 0; }
+        // );
+        // core::modComManager.registerObserver(
+        //     RADIO_IFACE_CMD_SET_MODE, this,
+        //     [&](int, const void*, void*) { updateLCD(); return 0; }
+        // );
 
         std::string lastFreq = "";
     }
