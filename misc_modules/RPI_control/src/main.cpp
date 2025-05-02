@@ -177,6 +177,18 @@ public:
         lcd_init();
         lcd_print("Starting...");
 
+        // Initial LCD update
+        updateLCD();
+        // Register observers to update LCD on freq/mode changes
+        core::modComManager.registerObserver(
+            RADIO_IFACE_CMD_SET_FREQUENCY, this,
+            [&](int, const void*, void*) { updateLCD(); return 0; }
+        );
+        core::modComManager.registerObserver(
+            RADIO_IFACE_CMD_SET_MODE, this,
+            [&](int, const void*, void*) { updateLCD(); return 0; }
+        );
+
         std::string lastFreq = "";
     }
 
@@ -227,6 +239,32 @@ public:
     }
 
 private:
+    
+    void updateLCD() {
+        double freqMHz = gui::waterfall.getCenterFrequency() / 1e6;
+        std::ostringstream freqOut;
+        freqOut << std::fixed << std::setprecision(3) << freqMHz;
+        std::string freqStr = freqOut.str();
+        if (freqStr.size() < 8) freqStr = std::string(8 - freqStr.size(), ' ') + freqStr;
+        else if (freqStr.size() > 8) freqStr.resize(8);
+
+        int modeCode = 0;
+        core::modComManager.callInterface(selectedVfo,
+            RADIO_IFACE_CMD_GET_MODE, nullptr, &modeCode);
+        std::string modeStr = radioModeToString[modeCode];
+        if (modeStr.size() < 3) modeStr += std::string(3 - modeStr.size(), ' ');
+        else if (modeStr.size() > 3) modeStr.resize(3);
+
+        lcd_clear();
+        lcd_set_cursor(0, 0);
+        lcd_print(freqStr);
+        lcd_set_cursor(8, 0);
+        lcd_print("MHz");
+        lcd_set_cursor(17, 0);
+        lcd_print(modeStr);
+    }
+    
+    
     static void menuHandler(void* ctx) {
         SigctlServerModule* _this = (SigctlServerModule*)ctx;
         float menuWidth = ImGui::GetContentRegionAvail().x;
@@ -804,41 +842,7 @@ private:
 
 
 
-        /**
-         * Populate LCD with relevent info
-         * 
-         * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-         */
-
-
-        double freqMHz = gui::waterfall.getCenterFrequency() / 1e6;
-        std::ostringstream freqOut;
-        freqOut << std::fixed << std::setprecision(3) << freqMHz;
-        std::string freqStr = freqOut.str();
-        if (freqStr.size() > 8) {
-            freqStr = freqStr.substr(0, 8);
-        } else if (freqStr.size() < 8) {
-            freqStr = std::string(8 - freqStr.size(), ' ') + freqStr;
-        }
-
-        std::string modeStr;
-        int modeCode = 0;
-        core::modComManager.callInterface(selectedVfo,
-            RADIO_IFACE_CMD_GET_MODE, nullptr, &modeCode);
-        modeStr = radioModeToString[modeCode];
-        if (modeStr.size() > 3) {
-            modeStr = modeStr.substr(0, 3);
-        } else if (modeStr.size() < 3) {
-            modeStr += std::string(3 - modeStr.size(), ' ');
-        }
-
-        lcd_clear();
-        lcd_set_cursor(0, 0);
-        lcd_print(freqStr);
-        lcd_set_cursor(8, 0);
-        lcd_print("MHz");
-        lcd_set_cursor(17, 0);
-        lcd_print(modeStr);
+                // LCD updates moved to updateLCD()
 
     }
 
